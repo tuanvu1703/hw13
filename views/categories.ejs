@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foods</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      li {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin: 16px;
+        padding: 16px;
+        max-width: calc(25% - 32px);
+        flex: 1 1 calc(25% - 32px);
+        text-align: center;
+        box-sizing: border-box;
+      }
+
+      img {
+        max-width: 100%;
+        border-radius: 8px;
+      }
+
+      h2 {
+        font-size: 1.5em;
+        margin: 0.5em 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Food Categories</h1>
+    <ul>
+      <% categories.forEach(category => { %>
+      <li>
+        <h2><%= category.name %></h2>
+        <img src="<%= category.img %>" alt="<%= category.name %>" />
+      
+      </li>
+      <% }) %>
+    </ul>
+  </body>
+</html>

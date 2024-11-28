@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foods</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+
+      .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+      }
+
+      h1, h2 {
+        text-align: center;
+        color: #333;
+      }
+
+      form {
+        background: #fff;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      form input, form button {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      form button {
+        background: #5cb85c;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+
+      form button:hover {
+        background: #4cae4c;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      li {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin: 16px;
+        padding: 16px;
+        max-width: calc(25% - 32px);
+        flex: 1 1 calc(25% - 32px);
+        text-align: center;
+        box-sizing: border-box;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      img {
+        max-width: 100%;
+        border-radius: 8px;
+      }
+
+      h2 {
+        font-size: 1.5em;
+        margin: 0.5em 0;
+      }
+
+      .popup, .overlay {
+        display: none;
+      }
+
+      .popup.active, .overlay.active {
+        display: block;
+      }
+
+      .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px 0;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        color: #fff;
+        background-color: #5cb85c;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        background-color: #4cae4c;
+      }
+
+      @media (max-width: 768px) {
+        .popup {
+          width: 90%;
+          padding: 15px;
+        }
+
+        form input, form button {
+          width: 100%;
+        }
+      }
+    </style>
+    <script>
+      function togglePopup(popupId) {
+        const popup = document.getElementById(popupId);
+        const overlay = document.getElementById("overlay");
+        popup.classList.toggle("active");
+        overlay.classList.toggle("active");
+      }
+
+      function fillUpdateForm(encodedFood) {
+        const food = JSON.parse(decodeURIComponent(encodedFood));
+        document.getElementById("updateForm").action = `/api/foods/${food._id}?_method=PUT`;
+        document.getElementById("updateName").value = food.name;
+        document.getElementById("updatePrice").value = food.price;
+        document.getElementById("updateImg").value = food.img;
+        document.getElementById("updateAddress").value = food.address;
+        document.getElementById("updateCategoryId").value = food.category_id;
+        togglePopup("updatePopup");
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Food Categories</h1>
+      <button class="btn" onclick="togglePopup('addPopup')">Add New Food</button>
+      <div id="addPopup" class="popup" role="dialog" aria-labelledby="addPopupTitle" aria-hidden="true">
+        <h2 id="addPopupTitle">Add New Food</h2>
+        <form action="/api/foods" method="POST">
+          <input type="text" name="name" placeholder="Name" required autofocus />
+          <input type="number" name="price" placeholder="Price" required />
+          <input type="text" name="img" placeholder="Image URL" required />
+          <input type="text" name="address" placeholder="Address" required />
+          <input type="text" name="category_id" placeholder="Category ID" required />
+          <button type="submit">Add Food</button>
+          <button type="button" onclick="togglePopup('addPopup')">Cancel</button>
+        </form>
+      </div>
+      <div id="updatePopup" class="popup" role="dialog" aria-labelledby="updatePopupTitle" aria-hidden="true">
+        <h2 id="updatePopupTitle">Update Food</h2>
+        <form id="updateForm" method="POST">
+          <input type="text" id="updateName" name="name" required />
+          <input type="number" id="updatePrice" name="price" required />
+          <input type="text" id="updateImg" name="img" required />
+          <input type="text" id="updateAddress" name="address" required />
+          <input type="text" id="updateCategoryId" name="category_id" required />
+          <button type="submit">Update Food</button>
+          <button type="button" onclick="togglePopup('updatePopup')">Cancel</button>
+        </form>
+      </div>
+      <div id="overlay" class="overlay" onclick="document.querySelectorAll('.popup.active').forEach(p => p.classList.remove('active')); this.classList.remove('active');"></div>
+      <ul>
+        <% foods.forEach(food => { %>
+        <li>
+          <h2><%= food.name %></h2>
+          <img src="<%= food.img %>" alt="<%= food.name %>" />
+          <p>Price: <%= food.price %></p>
+          <p>Address: <%= food.address %></p>
+          <p>Category ID: <%= food.category_id %></p>
+          <button class="btn" onclick='fillUpdateForm("<%= encodeURIComponent(JSON.stringify(food)) %>")'>Update</button>
+          <form action="/api/foods/<%= food._id %>?_method=DELETE" method="POST">
+            <button type="submit" class="btn">Delete</button>
+          </form>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
+  </body>
+</html>
