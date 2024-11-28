@@ -7,36 +7,70 @@
     <style>
       body {
         font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        color: #333;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 2.5em;
+        margin: 20px 0;
+        color: #444;
       }
 
       ul {
         list-style-type: none;
         padding: 0;
+        margin: 0 auto;
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: center;
+        max-width: 1200px;
       }
 
       li {
         border: 1px solid #ccc;
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         margin: 16px;
         padding: 16px;
-        max-width: calc(25% - 32px);
-        flex: 1 1 calc(25% - 32px);
+        width: calc(25% - 32px);
         text-align: center;
         box-sizing: border-box;
+        background-color: #fff;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      li:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       }
 
       img {
         max-width: 100%;
         border-radius: 8px;
+        margin-bottom: 12px;
       }
 
       h2 {
         font-size: 1.5em;
         margin: 0.5em 0;
+        color: #555;
+      }
+
+      @media (max-width: 768px) {
+        li {
+          width: calc(50% - 32px);
+        }
+      }
+
+      @media (max-width: 480px) {
+        li {
+          width: 100%;
+          margin: 16px 0;
+        }
       }
     </style>
   </head>
@@ -45,10 +79,11 @@
     <ul>
       <% categories.forEach(category => { %>
       <li>
-        <h2><%= category.name %></h2>
         <img src="<%= category.img %>" alt="<%= category.name %>" />
+        <h2><%= category.name %></h2>
       </li>
       <% }) %>
     </ul>
   </body>
 </html>
+
